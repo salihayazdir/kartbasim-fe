@@ -1,20 +1,11 @@
 import { PropsWithChildren } from 'react';
+import Sidebar from './navigation/Sidebar';
 
 export default function Layout({ children }: PropsWithChildren) {
-  const navMenuItems = [
-    {
-      name: 'Ana Sayfa',
-      slug: '',
-    },
-    {
-      name: 'Tanımlar',
-      slug: '',
-    },
-  ];
-
   return (
-    <>
+    <div className='flex min-h-screen'>
+      <Sidebar />
       <main>{children}</main>
-    </>
+    </div>
   );
 }
