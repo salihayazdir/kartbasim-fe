@@ -1,10 +1,10 @@
-export interface MenuItem {
+export interface INavItem {
   name: string;
   slug: string;
-  subItems?: MenuItem[];
+  subItems?: INavItem[];
 }
 
-export const navMenuItems: MenuItem[] = [
+export const navMenuItems: INavItem[] = [
   {
     name: 'Ana Sayfa',
     slug: '',
@@ -58,6 +58,10 @@ export const navMenuItems: MenuItem[] = [
         slug: 'urun-gruplari',
       },
       {
+        name: 'Ürün Tipleri',
+        slug: 'urun-tipleri',
+      },
+      {
         name: 'Sarflar',
         slug: 'sarflar',
       },
@@ -67,7 +71,7 @@ export const navMenuItems: MenuItem[] = [
       },
       {
         name: 'Kart Basım Makineleri',
-        slug: 'kart-basim-makineleri',
+        slug: 'makineler',
       },
       {
         name: 'Vardiyalar',
@@ -77,6 +81,6 @@ export const navMenuItems: MenuItem[] = [
   },
   {
     name: 'Kullanıcılar',
-    slug: 'tanimlar',
+    slug: 'kullanicilar',
   },
 ];
