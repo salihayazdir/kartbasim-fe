@@ -1,6 +1,15 @@
+import {
+  ChartBarIcon,
+  CreditCardIcon,
+  ListBulletIcon,
+  PresentationChartLineIcon,
+  Square3Stack3DIcon,
+  UserIcon,
+} from '@heroicons/react/24/outline';
 export interface INavItem {
   name: string;
   slug: string;
+  icon?: (size: number) => React.ReactNode;
   subItems?: INavItem[];
 }
 
@@ -8,14 +17,23 @@ export const navMenuItems: INavItem[] = [
   {
     name: 'Ana Sayfa',
     slug: '',
+    icon: (size: number) => {
+      return <ChartBarIcon className={`h-${size} w-${size}`} />;
+    },
   },
   {
     name: 'İcmaller',
     slug: 'icmaller',
+    icon: (size: number) => {
+      return <ListBulletIcon className={`h-${size} w-${size}`} />;
+    },
   },
   {
     name: 'Stok Yönetimi',
     slug: 'stok-yonetimi',
+    icon: (size: number) => {
+      return <Square3Stack3DIcon className={`h-${size} w-${size}`} />;
+    },
     subItems: [
       {
         name: 'Kasalar',
@@ -30,11 +48,10 @@ export const navMenuItems: INavItem[] = [
   {
     name: 'Raporlar',
     slug: 'raporlar',
+    icon: (size: number) => {
+      return <PresentationChartLineIcon className={`h-${size} w-${size}`} />;
+    },
     subItems: [
-      {
-        name: 'X Raporlari',
-        slug: 'x',
-      },
       {
         name: 'Stok Hareketleri',
         slug: 'stok-hareketleri',
@@ -44,6 +61,9 @@ export const navMenuItems: INavItem[] = [
   {
     name: 'Tanımlar',
     slug: 'tanimlar',
+    icon: (size: number) => {
+      return <CreditCardIcon className={`h-${size} w-${size}`} />;
+    },
     subItems: [
       {
         name: 'Bankalar',
@@ -82,5 +102,8 @@ export const navMenuItems: INavItem[] = [
   {
     name: 'Kullanıcılar',
     slug: 'kullanicilar',
+    icon: (size: number) => {
+      return <UserIcon className={`h-${size} w-${size}`} />;
+    },
   },
 ];

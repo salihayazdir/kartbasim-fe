@@ -1,7 +1,8 @@
-import BanksTable from '@/components/tables/BanksTable';
-import { useGetBanks } from '@/dataHooks/useBanksData';
-import { useState, useContext } from 'react';
-import type { Bank, GetBanksResponse } from '@/dataHooks/useBanksData';
+import BanksTable from '@/components/tables/banks/BanksTable';
+import { useGetBanks } from '@/data/hooks/useBanksData';
+import { useState, useContext, useRef } from 'react';
+import type { ResponseObject } from '@/data/models/dataTransferModels';
+import type { Bank } from '@/data/models/entityModels';
 import { AppContext } from '@/context/AppContext';
 
 export default function Bankalar() {
@@ -9,31 +10,17 @@ export default function Bankalar() {
 
   const [tableData, setTableData] = useState<Bank[]>([]);
 
-  console.log(tableData);
-
-  const onGetBanksSuccess = (data: GetBanksResponse) => {
-    console.log('scs');
-    setTableData(data.recordset);
+  const onGetBanksSuccess = (data: ResponseObject<Bank[]>) => {
+    setTableData(data.data);
   };
 
-  const onGetBanksError = () => {
-    console.log('err');
-  };
+  const onGetBanksError = () => {};
 
   const getBanksQueryResult = useGetBanks(onGetBanksSuccess, onGetBanksError);
 
   return (
     <>
       <BanksTable queryResult={getBanksQueryResult} tableData={tableData} />
-      <div className='mt-20'>
-        {getBanksQueryResult.isLoading
-          ? 'loading'
-          : `${JSON.stringify(getBanksQueryResult.data?.recordset)}`}
-      </div>
-      <div className='mt-4'>
-        {getBanksQueryResult.isError &&
-          `${JSON.stringify(getBanksQueryResult.error)}`}
-      </div>
     </>
   );
 }

@@ -1,9 +1,13 @@
-export default function SpinningLoader(size: string) {
+type SpinningLoaderProps = {
+  size: number;
+};
+
+export default function SpinningLoader({ size }: SpinningLoaderProps) {
   return (
     <div role='status'>
       <svg
         aria-hidden='true'
-        className={`mr-2 text-gray-200 h-${size} w-${size} animate-spin fill-blue-600`}
+        className={`mr-2 h-[${size}px] w-[${size}px] animate-spin fill-blue-600 text-slate-200`}
         viewBox='0 0 100 101'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
@@ -21,7 +25,3 @@ export default function SpinningLoader(size: string) {
     </div>
   );
 }
-
-SpinningLoader.defaultProps = {
-  size: '10',
-};

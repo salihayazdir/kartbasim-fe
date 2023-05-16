@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import { navMenuItems, INavItem } from './navigation/navMenuItems';
 import NavItemWithSub from './navigation/NavItemWithSub';
 import NavItem from './navigation/NavItem';
@@ -10,13 +9,13 @@ type SidebarProps = {
 
 export default function Sidebar({ currentPageProps }: SidebarProps) {
   const navItemStyles =
-    'flex w-full justify-between hover:bg-white cursor-pointer rounded-lg px-4 py-2 text-left text-sm font-semibold text-gray-700 gap-3';
+    'flex justify-between w-full hover:bg-slate-50  cursor-pointer rounded-lg px-4 py-2 text-left text-sm font-semibold';
 
   return (
     <div className='flex min-h-screen'>
-      <div className='flex flex-col gap-8 border border-r border-gray-200 bg-gray-50 px-4 py-6'>
+      <div className='flex flex-col gap-8 border-slate-200 px-4 py-6 shadow-lg'>
         <div>LOGO</div>
-        <nav className='flex flex-col gap-4'>
+        <nav className='flex flex-col gap-4 text-gray-400 '>
           {navMenuItems.map((item: INavItem) => {
             if (item.subItems) {
               return (

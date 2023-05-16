@@ -1,49 +1,67 @@
-import { PropsWithChildren, useState, ChangeEvent, FormEvent } from 'react';
-import { useAddBank } from '@/dataHooks/useBanksData';
-import DialogWrapper from '../DialogWrapper';
+import React, { useState, useEffect } from 'react';
+import { useAddBank } from '@/data/hooks/useBanksData';
+import ModalWrapper from '../DialogWrapper';
+import DialogResponseMessages from '../DialogResponseMessages';
+import { AxiosError } from 'axios';
 
-export default function AddBankDialog({ children }: PropsWithChildren) {
+type AddBankDialogProps = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function AddBankDialog({
+  open,
+  setOpen,
+}: React.PropsWithChildren<AddBankDialogProps>) {
   const [newBankName, setNewBankName] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const { mutate, isLoading, isError, error } = useAddBank();
+  const { mutate, isLoading, isError, error, data, isSuccess } = useAddBank();
 
-  const newBankNameOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewBankName(e.currentTarget.value);
+  useEffect(() => {
+    if (error instanceof AxiosError)
+      setErrorMessage(error.response?.data.error.message);
+  }, [error]);
+
+  const newBankNameOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewBankName(e.target.value);
   };
 
-  const addBankOnSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const addBankOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutate(newBankName);
   };
 
   return (
-    <>
-      <DialogWrapper title='Banka Ekle' trigger={children}>
-        <form onSubmit={addBankOnSubmit}>
-          <fieldset className='mb-[15px] flex items-center gap-5'>
-            <label
-              className='w-[90px] text-right text-[15px] text-violet11'
-              htmlFor='bankName'
-            >
-              Banka İsmi
-            </label>
-            <input
-              value={newBankName}
-              onChange={newBankNameOnChange}
-              disabled={isLoading}
-              id='bankName'
-              className='inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-violet11 shadow-[0_0_0_1px] shadow-violet7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-violet8'
-            />
-          </fieldset>
-          <button
-            type='submit'
+    <ModalWrapper open={open} setOpen={setOpen} title='Banka Ekle'>
+      <form onSubmit={addBankOnSubmit} className='flex flex-col gap-6 text-sm'>
+        <fieldset className='flex flex-col gap-1'>
+          <label className='font-semibold text-slate-700' htmlFor='bankName'>
+            Banka İsmi
+          </label>
+          <input
+            value={newBankName}
+            onChange={newBankNameOnChange}
             disabled={isLoading}
-            className='inline-flex h-[35px] items-center justify-center rounded-[4px] bg-green4 px-[15px] font-medium leading-none text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 focus:outline-none'
-          >
-            Gönder
-          </button>
-        </form>
-      </DialogWrapper>
-    </>
+            id='bankName'
+            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          />
+        </fieldset>
+        <DialogResponseMessages
+          isError={isError}
+          isSuccess={isSuccess}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          successMessage={`Banka başarıyla oluşturuldu. ID: ${data?.data.data.insertedBankId}`}
+        />
+        <button
+          type='submit'
+          disabled={isLoading}
+          className='rounded-lg bg-blue-700 px-6 py-3 text-sm  font-medium uppercase tracking-wider text-white hover:bg-blue-800'
+        >
+          Gönder
+        </button>
+      </form>
+    </ModalWrapper>
   );
 }
