@@ -40,8 +40,8 @@ export const navMenuItems: INavItem[] = [
         slug: 'kasalar',
       },
       {
-        name: 'Sarf Stokları',
-        slug: 'sarf-stoklari',
+        name: 'Matbuat Stokları',
+        slug: 'matbuat-stoklari',
       },
     ],
   },
@@ -52,6 +52,14 @@ export const navMenuItems: INavItem[] = [
       return <PresentationChartLineIcon className={`h-${size} w-${size}`} />;
     },
     subItems: [
+      {
+        name: 'Üretim Raporları',
+        slug: 'uretim-raporlari',
+      },
+      {
+        name: 'Vardiya Raporlari',
+        slug: 'vardiya-raporlari',
+      },
       {
         name: 'Stok Hareketleri',
         slug: 'stok-hareketleri',
@@ -82,12 +90,12 @@ export const navMenuItems: INavItem[] = [
         slug: 'urun-tipleri',
       },
       {
-        name: 'Sarflar',
-        slug: 'sarflar',
+        name: 'Matbuat',
+        slug: 'matbuat',
       },
       {
-        name: 'Sarf Türleri',
-        slug: 'sarf-turleri',
+        name: 'Matbuat Türleri',
+        slug: 'matbuat-turleri',
       },
       {
         name: 'Kart Basım Makineleri',

@@ -3,6 +3,7 @@ import { useAddBank } from '@/data/hooks/useBanksData';
 import ModalWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
+import DialogActionButton from '../DialogActionButton';
 
 type AddBankDialogProps = {
   open: boolean;
@@ -43,7 +44,9 @@ export default function AddBankDialog({
             value={newBankName}
             onChange={newBankNameOnChange}
             disabled={isLoading}
+            required
             id='bankName'
+            pattern='.{3,}'
             className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
           />
         </fieldset>
@@ -52,15 +55,17 @@ export default function AddBankDialog({
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Banka başarıyla oluşturuldu. ID: ${data?.data.data.insertedBankId}`}
+          successMessage={`Banka başarıyla oluşturuldu. ID: ${data?.data.data.insertedId}`}
         />
-        <button
+
+        <DialogActionButton
+          isSuccess={isSuccess}
+          closeButtonOnClick={() => setOpen(false)}
           type='submit'
           disabled={isLoading}
-          className='rounded-lg bg-blue-700 px-6 py-3 text-sm  font-medium uppercase tracking-wider text-white hover:bg-blue-800'
         >
           Gönder
-        </button>
+        </DialogActionButton>
       </form>
     </ModalWrapper>
   );

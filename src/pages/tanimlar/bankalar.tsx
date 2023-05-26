@@ -16,11 +16,11 @@ export default function Bankalar() {
 
   const onGetBanksError = () => {};
 
-  const getBanksQueryResult = useGetBanks(onGetBanksSuccess, onGetBanksError);
+  useGetBanks(onGetBanksSuccess, onGetBanksError);
 
   return (
     <>
-      <BanksTable queryResult={getBanksQueryResult} tableData={tableData} />
+      <BanksTable tableData={tableData} />
     </>
   );
 }

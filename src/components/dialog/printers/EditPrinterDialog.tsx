@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useEditBank } from '@/data/hooks/useBanksData';
-import type { Bank } from '@/data/models/entityModels';
+import { useEditPrinter } from '@/data/hooks/usePrintersData';
+import type { Printer } from '@/data/models/entityModels';
 import ModalWrapper from '../DialogWrapper';
 import { Switch } from '@headlessui/react';
 import DialogResponseMessages from '../DialogResponseMessages';
@@ -8,31 +8,32 @@ import { AxiosError } from 'axios';
 import _ from 'lodash';
 import DialogActionButton from '../DialogActionButton';
 
-type EditBankDialogProps = {
-  record: Bank;
+type EditPrinterDialogProps = {
+  record: Printer;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRecord: React.Dispatch<React.SetStateAction<Bank | null>>;
+  setSelectedRecord: React.Dispatch<React.SetStateAction<Printer | null>>;
 };
 
-export default function EditBankDialog({
+export default function EditPrinterDialog({
   record,
   open,
   setOpen,
   setSelectedRecord,
-}: React.PropsWithChildren<EditBankDialogProps>) {
-  const [newRecord, setNewRecord] = useState<Bank>(record);
+}: React.PropsWithChildren<EditPrinterDialogProps>) {
+  const [newRecord, setNewRecord] = useState<Printer>(record);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const { mutate, isLoading, isError, isSuccess, data, error } = useEditBank();
+  const { mutate, isLoading, isError, isSuccess, data, error } =
+    useEditPrinter();
 
   useEffect(() => {
     if (error instanceof AxiosError)
       setErrorMessage(error.response?.data.error.message);
   }, [error]);
 
-  const isUnchanged: boolean = _.isEqual(record, newRecord);
+  const isUnchanged: boolean = _.isEqual(newRecord, record);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -47,11 +48,13 @@ export default function EditBankDialog({
     mutate(newRecord);
   };
 
-  const title = `Banka Düzenle | ${record.name}`;
+  const title = `Makine Düzenle | ${record.name}`;
 
   const onCloseAction = () => {
     setSelectedRecord(null);
+    setOpen(false);
   };
+
   return (
     <ModalWrapper
       onCloseAction={onCloseAction}
@@ -62,7 +65,7 @@ export default function EditBankDialog({
       <form onSubmit={onSubmit} className='flex flex-col gap-4 text-sm'>
         <fieldset className='flex flex-col gap-1'>
           <label className='font-semibold text-slate-700' htmlFor='name'>
-            Banka İsmi
+            Makine İsmi
           </label>
           <input
             value={newRecord.name}
@@ -72,6 +75,49 @@ export default function EditBankDialog({
             required
             pattern='.{3,}'
             onKeyDown={(e) => e.stopPropagation()}
+            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          />
+        </fieldset>
+
+        <fieldset className='flex flex-col gap-1'>
+          <label className='font-semibold text-slate-700' htmlFor='model'>
+            Model
+          </label>
+          <input
+            value={newRecord.model}
+            onChange={onChange}
+            disabled={isLoading}
+            id='model'
+            required
+            pattern='.{3,}'
+            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          />
+        </fieldset>
+
+        <fieldset className='flex flex-col gap-1'>
+          <label className='font-semibold text-slate-700' htmlFor='serial_no'>
+            Seri No
+          </label>
+          <input
+            value={newRecord.serial_no}
+            onChange={onChange}
+            disabled={isLoading}
+            id='serial_no'
+            required
+            pattern='.{3,}'
+            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          />
+        </fieldset>
+
+        <fieldset className='flex flex-col gap-1'>
+          <label className='font-semibold text-slate-700' htmlFor='description'>
+            Açıklama
+          </label>
+          <input
+            value={newRecord.description}
+            onChange={onChange}
+            disabled={isLoading}
+            id='description'
             className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
           />
         </fieldset>
@@ -102,7 +148,7 @@ export default function EditBankDialog({
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Banka başarıyla düzenlendi. ID: ${data?.data.data.editedId}`}
+          successMessage={`Makine başarıyla düzenlendi.`}
         />
 
         <DialogActionButton

@@ -2,6 +2,7 @@ import { navMenuItems, INavItem } from './navigation/navMenuItems';
 import NavItemWithSub from './navigation/NavItemWithSub';
 import NavItem from './navigation/NavItem';
 import type { PageProps } from '@/utils/useCurrentPageProps';
+import Image from 'next/image';
 
 type SidebarProps = {
   currentPageProps: PageProps;
@@ -14,7 +15,14 @@ export default function Sidebar({ currentPageProps }: SidebarProps) {
   return (
     <div className='flex min-h-screen'>
       <div className='flex flex-col gap-8 border-slate-200 px-4 py-6 shadow-lg'>
-        <div>LOGO</div>
+        <div className='pl-2'>
+          <Image
+            src='/bilesimLogo.png'
+            alt='Bileşim Logo'
+            width='132'
+            height='33'
+          />
+        </div>
         <nav className='flex flex-col gap-4 text-gray-400 '>
           {navMenuItems.map((item: INavItem) => {
             if (item.subItems) {

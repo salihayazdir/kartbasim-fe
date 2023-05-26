@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import parseDateTime from '@/utils/parseDatetime';
-import { ArrowDownTrayIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import {
   ColumnDef,
   getCoreRowModel,
@@ -10,43 +10,49 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
 } from '@tanstack/react-table';
-import type { Bank } from '@/data/models/entityModels';
-import EditBankDialog from '@/components/dialog/banks/EditBankDialog';
-import DeleteBankDialog from '@/components/dialog/banks/DeleteBankDialog';
-import AddBankDialog from '@/components/dialog/banks/AddBankDialog';
-import BankActionsDropdown from './BankActionsDropdown';
+import type { Printer } from '@/data/models/entityModels';
+import PrinterActionsDropdown from './PrinterActionsDropdown';
+import EditPrinterDialog from '@/components/dialog/printers/EditPrinterDialog';
+import DeletePrinterDialog from '@/components/dialog/printers/DeletePrinterDialog';
+import AddPrinterDialog from '@/components/dialog/printers/AddPrinterDialog';
 import TableInstance from '../TableInstance';
 import exportToExcel from '@/utils/exportToExcel';
 
-type BanksTableProps = {
-  tableData: Bank[];
+type PrintersTableProps = {
+  tableData: Printer[];
 };
 
-export default function BanksTable({ tableData }: BanksTableProps) {
-  const [selectedRecord, setSelectedRecord] = useState<Bank | null>(null);
+export default function PrintersTable({ tableData }: PrintersTableProps) {
+  const [selectedRecord, setSelectedRecord] = useState<Printer | null>(null);
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const [deleteBankModalIsOpen, setDeleteBankModalIsOpen] =
+  const [deletePrinterModalIsOpen, setDeletePrinterModalIsOpen] =
     useState<boolean>(false);
-  const [editBankModalIsOpen, setEditBankModalIsOpen] =
+  const [editPrinterModalIsOpen, setEditPrinterModalIsOpen] =
     useState<boolean>(false);
-  const [addBankModalIsOpen, setAddBankModalIsOpen] = useState<boolean>(false);
+  const [addPrinterModalIsOpen, setAddPrinterModalIsOpen] =
+    useState<boolean>(false);
 
-  const { isLoading } = useQuery(['banks'], { enabled: false });
+  const { isLoading, isFetching } = useQuery(['printers'], { enabled: false });
 
   const handleExportToExcel = () => {
     const data = tableData.map((item) => ({
       ID: item.id,
       İsim: item.name,
       Durum: item.is_active ? 'Aktif' : 'Pasif',
+      Model: item.model,
+      SeriNo: item.serial_no,
+      Açıklama: item.description,
     }));
-    exportToExcel({ data, fileName: 'bankalar' });
+    exportToExcel({ data, fileName: 'makineler' });
   };
 
-  const columns = useMemo<ColumnDef<Bank>[]>(
+  const columns = useMemo<ColumnDef<Printer>[]>(
     () => [
       {
         accessorKey: 'id',
@@ -55,7 +61,7 @@ export default function BanksTable({ tableData }: BanksTableProps) {
       },
       {
         accessorKey: 'name',
-        header: () => <span>Banka Adı</span>,
+        header: () => <span>Makine Adı</span>,
       },
       {
         accessorKey: 'is_active',
@@ -78,6 +84,19 @@ export default function BanksTable({ tableData }: BanksTableProps) {
             </div>
           );
         },
+      },
+      {
+        accessorKey: 'model',
+        header: () => <span>Model</span>,
+      },
+      {
+        accessorKey: 'serial_no',
+        header: () => <span>Seri No</span>,
+      },
+      {
+        accessorKey: 'description',
+        enableColumnFilter: false,
+        header: () => <span>Açıklama</span>,
       },
       {
         accessorKey: 'created_by',
@@ -122,11 +141,11 @@ export default function BanksTable({ tableData }: BanksTableProps) {
         enableSorting: false,
         cell: ({ row }) => {
           return (
-            <BankActionsDropdown
+            <PrinterActionsDropdown
               record={row.original}
               key={row.id}
-              setEditBankModalIsOpen={setEditBankModalIsOpen}
-              setDeleteBankModalIsOpen={setDeleteBankModalIsOpen}
+              setEditPrinterModalIsOpen={setEditPrinterModalIsOpen}
+              setDeletePrinterModalIsOpen={setDeletePrinterModalIsOpen}
               setSelectedRecord={setSelectedRecord}
             />
           );
@@ -145,6 +164,8 @@ export default function BanksTable({ tableData }: BanksTableProps) {
     },
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -164,11 +185,11 @@ export default function BanksTable({ tableData }: BanksTableProps) {
               <span>Excel'e Aktar</span>
             </button>
             <button
-              onClick={() => setAddBankModalIsOpen(true)}
+              onClick={() => setAddPrinterModalIsOpen(true)}
               className='flex-end inline-flex items-center gap-3 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 hover:shadow-md'
             >
               <PlusIcon className='h-5 w-5' />
-              <span>Banka Ekle</span>
+              <span>Makine Ekle</span>
             </button>
           </div>
           <TableInstance isLoading={isLoading} table={table} />
@@ -177,27 +198,27 @@ export default function BanksTable({ tableData }: BanksTableProps) {
       </div>
 
       {selectedRecord !== null ? (
-        <EditBankDialog
-          open={editBankModalIsOpen}
-          setOpen={setEditBankModalIsOpen}
+        <EditPrinterDialog
+          open={editPrinterModalIsOpen}
+          setOpen={setEditPrinterModalIsOpen}
           record={selectedRecord}
           setSelectedRecord={setSelectedRecord}
         />
       ) : null}
 
       {selectedRecord !== null ? (
-        <DeleteBankDialog
-          open={deleteBankModalIsOpen}
-          setOpen={setDeleteBankModalIsOpen}
+        <DeletePrinterDialog
+          open={deletePrinterModalIsOpen}
+          setOpen={setDeletePrinterModalIsOpen}
           record={selectedRecord}
           setSelectedRecord={setSelectedRecord}
         />
       ) : null}
 
-      {addBankModalIsOpen ? (
-        <AddBankDialog
-          open={addBankModalIsOpen}
-          setOpen={setAddBankModalIsOpen}
+      {addPrinterModalIsOpen ? (
+        <AddPrinterDialog
+          open={addPrinterModalIsOpen}
+          setOpen={setAddPrinterModalIsOpen}
         />
       ) : null}
     </>

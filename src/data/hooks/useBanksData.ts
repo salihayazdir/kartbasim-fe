@@ -1,9 +1,4 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  UseMutationResult,
-} from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios, { AxiosResponse } from 'axios';
 import type { ResponseObject } from '../models/dataTransferModels';
 import type { Bank } from '../models/entityModels';
@@ -18,7 +13,7 @@ export const useGetBanks = (
   onError: (data: ResponseObject<Bank[]>) => void
 ) => {
   return useQuery({
-    queryKey: ['getBanks'],
+    queryKey: ['banks'],
     queryFn: fetchBanks,
     onError,
     onSuccess,
@@ -27,7 +22,7 @@ export const useGetBanks = (
 
 const addBank = (
   name: string
-): Promise<AxiosResponse<ResponseObject<{ insertedBankId: number }>>> => {
+): Promise<AxiosResponse<ResponseObject<{ insertedId: number }>>> => {
   const requestBody = {
     name,
   };
@@ -38,7 +33,7 @@ export const useAddBank = () => {
   const queryClient = useQueryClient();
   return useMutation(addBank, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['getBanks']);
+      queryClient.invalidateQueries(['banks']);
     },
   });
 };
@@ -56,12 +51,14 @@ export const useEditBank = () => {
   const queryClient = useQueryClient();
   return useMutation(editBank, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['getBanks']);
+      queryClient.invalidateQueries(['banks']);
     },
   });
 };
 
-const deleteBank = (id: number) => {
+const deleteBank = (
+  id: number
+): Promise<AxiosResponse<ResponseObject<{ deletedId: number }>>> => {
   return axios.delete(`/api/banks/${id}`);
 };
 
@@ -70,7 +67,7 @@ export const useDeleteBank = () => {
   return useMutation(deleteBank, {
     onSuccess: () => {
       setTimeout(() => {
-        queryClient.invalidateQueries(['getBanks']);
+        queryClient.invalidateQueries(['banks']);
       }, 3000);
     },
   });
