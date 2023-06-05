@@ -4,6 +4,8 @@ import { useState, useContext, useRef } from 'react';
 import type { ResponseObject } from '@/data/models/dataTransferModels';
 import type { Bank } from '@/data/models/entityModels';
 import { AppContext } from '@/context/AppContext';
+import authControl from '@/utils/authControl';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 
 export default function Bankalar() {
   const { test, setTest } = useContext(AppContext);
@@ -24,3 +26,9 @@ export default function Bankalar() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  return authControl(context);
+};

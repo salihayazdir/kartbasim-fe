@@ -29,7 +29,7 @@ export default function DialogResponseMessages({
   if (isLoading)
     return (
       <div className='flex justify-center'>
-        <SpinningLoader size={30} />
+        <SpinningLoader />
       </div>
     );
 
@@ -37,7 +37,7 @@ export default function DialogResponseMessages({
 
   return (
     <div
-      className={`rounded-md p-3 font-medium ${
+      className={`rounded-md px-5 py-3 font-medium ${
         isError ? ' bg-red-50 text-red-700' : null
       } ${isSuccess ? ' bg-green-50 text-green-700' : null}`}
     >

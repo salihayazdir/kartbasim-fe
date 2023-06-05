@@ -3,7 +3,7 @@ import React from 'react';
 interface DialogActionButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isSuccess: boolean;
-  closeButtonOnClick: () => void;
+  closeButtonOnClick?: () => void;
 }
 
 export default function DialogActionButton({

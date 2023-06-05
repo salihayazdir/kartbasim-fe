@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 const client = new QueryClient();
 export default function App({ Component, pageProps, ...appProps }: AppProps) {
+  axios.defaults.withCredentials = true;
   axios.defaults.baseURL =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:4000'
