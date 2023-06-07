@@ -17,7 +17,8 @@ export default function DialogResponseMessages({
 }: DialogResponseMessagesProps) {
   const constructMessage = (): string | null => {
     if (isError) {
-      if (errorMessage === null) return 'Bir hata meydana geldi.';
+      if (errorMessage === null || errorMessage === undefined)
+        return 'Bir hata meydana geldi.';
       return errorMessage;
     }
 

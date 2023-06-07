@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import type { Printer } from '@/data/models/entityModels';
+import type { ConsumableType } from '@/data/models/entityModels';
 import DialogWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
-import { useDeletePrinter } from '@/data/hooks/usePrintersData';
+import { useDeleteConsumableType } from '@/data/hooks/useConsumableTypesData';
 import DialogActionButton from '../DialogActionButton';
 
-type DeletePrinterDialogProps = {
-  record: Printer;
+type DeleteConsumableTypeDialogProps = {
+  record: ConsumableType;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRecord: React.Dispatch<React.SetStateAction<Printer | null>>;
+  setSelectedRecord: React.Dispatch<
+    React.SetStateAction<ConsumableType | null>
+  >;
 };
 
-export default function DeletePrinterDialog({
+export default function DeleteConsumableTypeDialog({
   record,
   open,
   setOpen,
   setSelectedRecord,
-}: React.PropsWithChildren<DeletePrinterDialogProps>) {
+}: React.PropsWithChildren<DeleteConsumableTypeDialogProps>) {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { mutate, isLoading, isError, error, data, isSuccess } =
-    useDeletePrinter();
+    useDeleteConsumableType();
 
   useEffect(() => {
     if (error instanceof AxiosError)
@@ -34,7 +36,7 @@ export default function DeletePrinterDialog({
     mutate(record.id);
   };
 
-  const title = `Makine Sil | ${record.name}`;
+  const title = `Matbuat Türü Sil | ${record.name}`;
 
   const onCloseAction = () => {
     setSelectedRecord(null);
@@ -60,7 +62,7 @@ export default function DeletePrinterDialog({
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Makine silindi. ID: ${data?.data.data.deletedId}`}
+          successMessage={`Matbuat Türü silindi. ID: ${data?.data.data.deletedId}`}
         />
 
         <DialogActionButton

@@ -48,14 +48,16 @@ export default function DeleteBankDialog({
     >
       <div className='flex flex-col gap-6 text-sm'>
         <p className='mt-2 text-gray-800'>
-          {record.id} ID'li banka silinecektir. <br /> Onaylıyor musunuz?
+          {`${record.id} ID'li banka silinecektir.`}
+          <br />
+          {`Onaylıyor musunuz?`}
         </p>
         <DialogResponseMessages
           isError={isError}
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Banka başarıyla silindi. ID: ${data?.data.data.deletedId}`}
+          successMessage={`Banka silindi. ID: ${data?.data.data.deletedId}`}
         />
 
         <DialogActionButton

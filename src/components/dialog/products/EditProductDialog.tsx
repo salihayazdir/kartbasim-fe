@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useEditPrinter } from '@/data/hooks/usePrintersData';
-import type { Printer } from '@/data/models/entityModels';
+import { useEditProduct } from '@/data/hooks/useProductsData';
+import type { Product } from '@/data/models/entityModels';
 import ModalWrapper from '../DialogWrapper';
 import { Switch } from '@headlessui/react';
 import DialogResponseMessages from '../DialogResponseMessages';
@@ -8,25 +8,25 @@ import { AxiosError } from 'axios';
 import _ from 'lodash';
 import DialogActionButton from '../DialogActionButton';
 
-type EditPrinterDialogProps = {
-  record: Printer;
+type EditProductDialogProps = {
+  record: Product;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRecord: React.Dispatch<React.SetStateAction<Printer | null>>;
+  setSelectedRecord: React.Dispatch<React.SetStateAction<Product | null>>;
 };
 
-export default function EditPrinterDialog({
+export default function EditProductDialog({
   record,
   open,
   setOpen,
   setSelectedRecord,
-}: React.PropsWithChildren<EditPrinterDialogProps>) {
-  const [newRecord, setNewRecord] = useState<Printer>(record);
+}: React.PropsWithChildren<EditProductDialogProps>) {
+  const [newRecord, setNewRecord] = useState<Product>(record);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { mutate, isLoading, isError, isSuccess, data, error } =
-    useEditPrinter();
+    useEditProduct();
 
   useEffect(() => {
     if (error instanceof AxiosError)
@@ -48,7 +48,7 @@ export default function EditPrinterDialog({
     mutate(newRecord);
   };
 
-  const title = `Makine Düzenle | ${record.name}`;
+  const title = `Ürün Düzenle | ${record.name}`;
 
   const onCloseAction = () => {
     setSelectedRecord(null);
@@ -65,7 +65,7 @@ export default function EditPrinterDialog({
       <form onSubmit={onSubmit} className='flex flex-col gap-4 text-sm'>
         <fieldset className='flex flex-col gap-1'>
           <label className='font-semibold text-slate-700' htmlFor='name'>
-            Makine İsmi
+            Ürün İsmi
           </label>
           <input
             value={newRecord.name}
@@ -80,29 +80,50 @@ export default function EditPrinterDialog({
         </fieldset>
 
         <fieldset className='flex flex-col gap-1'>
-          <label className='font-semibold text-slate-700' htmlFor='model'>
-            Model
+          <label
+            className='font-semibold text-slate-700'
+            htmlFor='product_group_id'
+          >
+            Ürün Grubu
           </label>
           <input
-            value={newRecord.model}
+            value={newRecord.product_group_id}
             onChange={onChange}
             disabled={isLoading}
-            id='model'
+            id='product_group_id'
             required
-            pattern='.{3,}'
+            type='number'
             className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
           />
         </fieldset>
 
         <fieldset className='flex flex-col gap-1'>
-          <label className='font-semibold text-slate-700' htmlFor='serial_no'>
-            Seri No
+          <label
+            className='font-semibold text-slate-700'
+            htmlFor='product_type_id'
+          >
+            Ürün Tipi
           </label>
           <input
-            value={newRecord.serial_no}
+            value={newRecord.product_type_id}
             onChange={onChange}
             disabled={isLoading}
-            id='serial_no'
+            id='product_type_id'
+            required
+            type='number'
+            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          />
+        </fieldset>
+
+        <fieldset className='flex flex-col gap-1'>
+          <label className='font-semibold text-slate-700' htmlFor='client_id'>
+            Müşteri Kodu
+          </label>
+          <input
+            value={newRecord.client_id}
+            onChange={onChange}
+            disabled={isLoading}
+            id='client_id'
             required
             pattern='.{3,}'
             className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
@@ -148,7 +169,7 @@ export default function EditPrinterDialog({
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Makine düzenlendi.`}
+          successMessage={`Ürün düzenlendi.`}
         />
 
         <DialogActionButton

@@ -101,10 +101,6 @@ export const navMenuItems: INavItem[] = [
         name: 'Kart Basım Makineleri',
         slug: 'makineler',
       },
-      {
-        name: 'Vardiyalar',
-        slug: 'vardiyalar',
-      },
     ],
   },
   {

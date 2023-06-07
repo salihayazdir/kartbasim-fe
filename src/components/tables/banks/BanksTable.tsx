@@ -158,14 +158,14 @@ export default function BanksTable({ tableData }: BanksTableProps) {
           <div className='flex w-full items-center justify-end gap-4 px-4 pb-4'>
             <button
               onClick={() => handleExportToExcel()}
-              className='flex-end inline-flex items-center gap-3 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:shadow-md'
+              className='flex-end inline-flex items-center gap-3 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 transition-all hover:text-gray-900 hover:shadow-md'
             >
               <ArrowDownTrayIcon className='h-5 w-5' />
-              <span>Excel'e Aktar</span>
+              <span>{`Excel'e Aktar`}</span>
             </button>
             <button
               onClick={() => setAddBankModalIsOpen(true)}
-              className='flex-end inline-flex items-center gap-3 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 hover:shadow-md'
+              className='flex-end inline-flex items-center gap-3 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-md'
             >
               <PlusIcon className='h-5 w-5' />
               <span>Banka Ekle</span>

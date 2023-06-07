@@ -29,7 +29,7 @@ export default async function authControl(context: GetServerSidePropsContext) {
           Authorization: accessToken,
         },
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err.data));
 
     if (!meRequest?.data.data)
       return {

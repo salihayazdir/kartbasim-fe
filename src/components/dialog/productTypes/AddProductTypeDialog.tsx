@@ -1,66 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import { useAddBank } from '@/data/hooks/useBanksData';
 import ModalWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
-import DialogActionButton from '../DialogActionButton';
+import { useAddProductType } from '@/data/hooks/useProductTypesData';
+import type { ProductType } from '@/data/models/entityModels';
+import DialogActionButton from '@/components/dialog/DialogActionButton';
 
-type AddBankDialogProps = {
+type AddProductTypeDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function AddBankDialog({
+export default function AddProductTypeDialog({
   open,
   setOpen,
-}: React.PropsWithChildren<AddBankDialogProps>) {
-  const [newBankName, setNewBankName] = useState<string>('');
+}: React.PropsWithChildren<AddProductTypeDialogProps>) {
+  const [newRecord, setNewRecord] = useState<
+    Omit<ProductType, 'id' | 'is_active' | 'is_deleted'>
+  >({
+    name: '',
+  });
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const { mutate, isLoading, isError, error, data, isSuccess } = useAddBank();
+  const { mutate, isLoading, isError, error, data, isSuccess } =
+    useAddProductType();
 
   useEffect(() => {
     if (error instanceof AxiosError)
       setErrorMessage(error.response?.data.error.message);
   }, [error]);
 
-  const newBankNameOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewBankName(e.target.value);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setNewRecord((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
-  const addBankOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(newBankName);
+    mutate(newRecord);
   };
 
   return (
-    <ModalWrapper open={open} setOpen={setOpen} title='Banka Ekle'>
-      <form onSubmit={addBankOnSubmit} className='flex flex-col gap-6 text-sm'>
+    <ModalWrapper open={open} setOpen={setOpen} title='Ürün Tipi Ekle'>
+      <form onSubmit={onSubmit} className='flex flex-col gap-6 text-sm'>
         <fieldset className='flex flex-col gap-1'>
-          <label className='font-semibold text-slate-700' htmlFor='bankName'>
-            Banka İsmi
+          <label className='font-semibold text-slate-700' htmlFor='name'>
+            Ürün Tipi İsmi
           </label>
           <input
-            value={newBankName}
-            onChange={newBankNameOnChange}
+            value={newRecord.name}
+            onChange={onChange}
             disabled={isLoading}
             required
-            id='bankName'
             pattern='.{3,}'
+            id='name'
             className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
           />
         </fieldset>
+
         <DialogResponseMessages
           isError={isError}
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Banka oluşturuldu. ID: ${data?.data.data.insertedId}`}
+          successMessage={`Ürün tipi oluşturuldu. ID: ${data?.data.data.insertedId}`}
         />
-
         <DialogActionButton
-          isSuccess={isSuccess}
           closeButtonOnClick={() => setOpen(false)}
+          isSuccess={isSuccess}
           type='submit'
           disabled={isLoading}
         >

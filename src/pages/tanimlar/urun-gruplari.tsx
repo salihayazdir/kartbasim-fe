@@ -1,8 +1,27 @@
+import ProductGroupsTable from '@/components/tables/productGroups/ProductGroupsTable';
+import { useState } from 'react';
+import type { ResponseObject } from '@/data/models/dataTransferModels';
+import type { ProductGroup } from '@/data/models/entityModels';
 import authControl from '@/utils/authControl';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { useGetProductGroups } from '@/data/hooks/useProductGroupsData';
 
 export default function UrunGruplari() {
-  return <>UrunGuruplari</>;
+  const [tableData, setTableData] = useState<ProductGroup[]>([]);
+
+  const onGetProductGroupsSuccess = (data: ResponseObject<ProductGroup[]>) => {
+    setTableData(data.data);
+  };
+
+  const onGetProductGroupsError = () => {};
+
+  useGetProductGroups(onGetProductGroupsSuccess, onGetProductGroupsError);
+
+  return (
+    <>
+      <ProductGroupsTable tableData={tableData} />
+    </>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (

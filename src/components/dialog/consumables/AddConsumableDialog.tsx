@@ -2,31 +2,29 @@ import React, { useState, useEffect } from 'react';
 import ModalWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
-import { useAddPrinter } from '@/data/hooks/usePrintersData';
-import type { Printer } from '@/data/models/entityModels';
+import { useAddConsumable } from '@/data/hooks/useConsumablesData';
+import type { Consumable } from '@/data/models/entityModels';
 import DialogActionButton from '@/components/dialog/DialogActionButton';
 
-type AddPrinterDialogProps = {
+type AddConsumableDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function AddPrinterDialog({
+export default function AddConsumableDialog({
   open,
   setOpen,
-}: React.PropsWithChildren<AddPrinterDialogProps>) {
+}: React.PropsWithChildren<AddConsumableDialogProps>) {
   const [newRecord, setNewRecord] = useState<
-    Omit<Printer, 'id' | 'is_active' | 'is_deleted'>
+    Omit<Consumable, 'id' | 'stock_quantity' | 'is_active' | 'is_deleted'>
   >({
     name: '',
-    model: '',
-    serial_no: '',
-    description: '',
+    consumable_type_id: 0,
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { mutate, isLoading, isError, error, data, isSuccess } =
-    useAddPrinter();
+    useAddConsumable();
 
   useEffect(() => {
     if (error instanceof AxiosError)
@@ -47,11 +45,11 @@ export default function AddPrinterDialog({
   };
 
   return (
-    <ModalWrapper open={open} setOpen={setOpen} title='Makine Ekle'>
+    <ModalWrapper open={open} setOpen={setOpen} title='Matbuat Ekle'>
       <form onSubmit={onSubmit} className='flex flex-col gap-6 text-sm'>
         <fieldset className='flex flex-col gap-1'>
           <label className='font-semibold text-slate-700' htmlFor='name'>
-            Makine İsmi
+            Matbuat İsmi
           </label>
           <input
             value={newRecord.name}
@@ -65,44 +63,19 @@ export default function AddPrinterDialog({
         </fieldset>
 
         <fieldset className='flex flex-col gap-1'>
-          <label className='font-semibold text-slate-700' htmlFor='model'>
-            Model
+          <label
+            className='font-semibold text-slate-700'
+            htmlFor='consumable_type_id'
+          >
+            Matbuat Türü
           </label>
           <input
-            value={newRecord.model}
+            value={newRecord.consumable_type_id}
             onChange={onChange}
             disabled={isLoading}
-            id='model'
+            id='consumable_type_id'
             required
-            pattern='.{3,}'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
-          />
-        </fieldset>
-
-        <fieldset className='flex flex-col gap-1'>
-          <label className='font-semibold text-slate-700' htmlFor='serial_no'>
-            Seri No
-          </label>
-          <input
-            value={newRecord.serial_no}
-            onChange={onChange}
-            disabled={isLoading}
-            id='serial_no'
-            required
-            pattern='.{3,}'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
-          />
-        </fieldset>
-
-        <fieldset className='flex flex-col gap-1'>
-          <label className='font-semibold text-slate-700' htmlFor='description'>
-            Açıklama
-          </label>
-          <input
-            value={newRecord.description}
-            onChange={onChange}
-            disabled={isLoading}
-            id='description'
+            type='number'
             className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
           />
         </fieldset>
@@ -112,7 +85,7 @@ export default function AddPrinterDialog({
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Makine oluşturuldu. ID: ${data?.data.data.insertedId}`}
+          successMessage={`Matbuat oluşturuldu. ID: ${data?.data.data.insertedId}`}
         />
         <DialogActionButton
           closeButtonOnClick={() => setOpen(false)}

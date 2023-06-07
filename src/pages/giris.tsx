@@ -45,7 +45,7 @@ export default function Giris() {
         });
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         setApiStatus({
           isLoading: false,
           isError: true,
@@ -72,17 +72,10 @@ export default function Giris() {
         { withCredentials: true }
       )
       .then((res) => {
-        console.log(res);
-        // setApiStatus({
-        //   isLoading: false,
-        //   isError: false,
-        //   isSuccess: true,
-        //   errorMessage: '',
-        // });
         router.reload();
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         setApiStatus({
           isLoading: false,
           isError: true,
@@ -219,7 +212,7 @@ export const getServerSideProps: GetServerSideProps = async (
           Authorization: accessToken,
         },
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err?.response?.data?.error));
 
     if (meRequest?.data.data)
       return {

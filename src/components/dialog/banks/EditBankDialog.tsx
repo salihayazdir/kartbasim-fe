@@ -102,7 +102,7 @@ export default function EditBankDialog({
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Banka başarıyla düzenlendi. ID: ${data?.data.data.editedId}`}
+          successMessage={`Banka düzenlendi. ID: ${data?.data.data.editedId}`}
         />
 
         <DialogActionButton

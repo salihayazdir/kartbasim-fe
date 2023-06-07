@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import type { Printer } from '@/data/models/entityModels';
+import type { Consumable } from '@/data/models/entityModels';
 import DialogWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
-import { useDeletePrinter } from '@/data/hooks/usePrintersData';
+import { useDeleteConsumable } from '@/data/hooks/useConsumablesData';
 import DialogActionButton from '../DialogActionButton';
 
-type DeletePrinterDialogProps = {
-  record: Printer;
+type DeleteConsumableDialogProps = {
+  record: Consumable;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRecord: React.Dispatch<React.SetStateAction<Printer | null>>;
+  setSelectedRecord: React.Dispatch<React.SetStateAction<Consumable | null>>;
 };
 
-export default function DeletePrinterDialog({
+export default function DeleteConsumableDialog({
   record,
   open,
   setOpen,
   setSelectedRecord,
-}: React.PropsWithChildren<DeletePrinterDialogProps>) {
+}: React.PropsWithChildren<DeleteConsumableDialogProps>) {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { mutate, isLoading, isError, error, data, isSuccess } =
-    useDeletePrinter();
+    useDeleteConsumable();
 
   useEffect(() => {
     if (error instanceof AxiosError)
@@ -34,7 +34,7 @@ export default function DeletePrinterDialog({
     mutate(record.id);
   };
 
-  const title = `Makine Sil | ${record.name}`;
+  const title = `Matbuat Sil | ${record.name}`;
 
   const onCloseAction = () => {
     setSelectedRecord(null);
@@ -50,7 +50,7 @@ export default function DeletePrinterDialog({
     >
       <div className='flex flex-col gap-6 text-sm'>
         <p className='mt-2 text-gray-800'>
-          {`${record.id} ID'li makine silinecektir.`}
+          {`${record.id} ID'li ürün silinecektir.`}
           <br />
           {`Onaylıyor musunuz?`}
         </p>
@@ -60,7 +60,7 @@ export default function DeletePrinterDialog({
           isSuccess={isSuccess}
           isLoading={isLoading}
           errorMessage={errorMessage}
-          successMessage={`Makine silindi. ID: ${data?.data.data.deletedId}`}
+          successMessage={`Matbuat silindi. ID: ${data?.data.data.deletedId}`}
         />
 
         <DialogActionButton

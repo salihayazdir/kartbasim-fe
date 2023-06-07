@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import parseDateTime from '@/utils/parseDatetime';
-import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, PlusIcon } from '@heroicons/react/24/outline';
 import {
   ColumnDef,
   getCoreRowModel,
@@ -10,49 +10,48 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
 } from '@tanstack/react-table';
-import type { Printer } from '@/data/models/entityModels';
-import PrinterActionsDropdown from './PrinterActionsDropdown';
-import EditPrinterDialog from '@/components/dialog/printers/EditPrinterDialog';
-import DeletePrinterDialog from '@/components/dialog/printers/DeletePrinterDialog';
-import AddPrinterDialog from '@/components/dialog/printers/AddPrinterDialog';
+import type { ProductType } from '@/data/models/entityModels';
+import EditProductTypeDialog from '@/components/dialog/productTypes/EditProductTypeDialog';
+import DeleteProductTypeDialog from '@/components/dialog/productTypes/DeleteProductTypeDialog';
+import AddProductTypeDialog from '@/components/dialog/productTypes/AddProductTypeDialog';
+import ProductTypeActionsDropdown from './ProductTypeActionsDropdown';
 import TableInstance from '../TableInstance';
 import exportToExcel from '@/utils/exportToExcel';
 
-type PrintersTableProps = {
-  tableData: Printer[];
+type ProductTypesTableProps = {
+  tableData: ProductType[];
 };
 
-export default function PrintersTable({ tableData }: PrintersTableProps) {
-  const [selectedRecord, setSelectedRecord] = useState<Printer | null>(null);
+export default function ProductTypesTable({
+  tableData,
+}: ProductTypesTableProps) {
+  const [selectedRecord, setSelectedRecord] = useState<ProductType | null>(
+    null
+  );
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const [deletePrinterModalIsOpen, setDeletePrinterModalIsOpen] =
+  const [deleteProductTypeModalIsOpen, setDeleteProductTypeModalIsOpen] =
     useState<boolean>(false);
-  const [editPrinterModalIsOpen, setEditPrinterModalIsOpen] =
+  const [editProductTypeModalIsOpen, setEditProductTypeModalIsOpen] =
     useState<boolean>(false);
-  const [addPrinterModalIsOpen, setAddPrinterModalIsOpen] =
+  const [addProductTypeModalIsOpen, setAddProductTypeModalIsOpen] =
     useState<boolean>(false);
 
-  const { isLoading, isFetching } = useQuery(['printers'], { enabled: false });
+  const { isLoading } = useQuery(['product-types'], { enabled: false });
 
   const handleExportToExcel = () => {
     const data = tableData.map((item) => ({
       ID: item.id,
       İsim: item.name,
       Durum: item.is_active ? 'Aktif' : 'Pasif',
-      Model: item.model,
-      SeriNo: item.serial_no,
-      Açıklama: item.description,
     }));
-    exportToExcel({ data, fileName: 'makineler' });
+    exportToExcel({ data, fileName: 'urun-tipleri' });
   };
 
-  const columns = useMemo<ColumnDef<Printer>[]>(
+  const columns = useMemo<ColumnDef<ProductType>[]>(
     () => [
       {
         accessorKey: 'id',
@@ -61,7 +60,7 @@ export default function PrintersTable({ tableData }: PrintersTableProps) {
       },
       {
         accessorKey: 'name',
-        header: () => <span>Makine Adı</span>,
+        header: () => <span>Ürün Grubu Adı</span>,
       },
       {
         accessorKey: 'is_active',
@@ -86,20 +85,7 @@ export default function PrintersTable({ tableData }: PrintersTableProps) {
         },
       },
       {
-        accessorKey: 'model',
-        header: () => <span>Model</span>,
-      },
-      {
-        accessorKey: 'serial_no',
-        header: () => <span>Seri No</span>,
-      },
-      {
-        accessorKey: 'description',
-        enableColumnFilter: false,
-        header: () => <span>Açıklama</span>,
-      },
-      {
-        accessorKey: 'created_by',
+        accessorKey: 'created_by_name',
         enableColumnFilter: false,
         header: () => <span>Oluşturan</span>,
       },
@@ -117,7 +103,7 @@ export default function PrintersTable({ tableData }: PrintersTableProps) {
         },
       },
       {
-        accessorKey: 'edited_by',
+        accessorKey: 'edited_by_name',
         enableColumnFilter: false,
         header: () => <span>Düzenleyen</span>,
       },
@@ -141,11 +127,11 @@ export default function PrintersTable({ tableData }: PrintersTableProps) {
         enableSorting: false,
         cell: ({ row }) => {
           return (
-            <PrinterActionsDropdown
+            <ProductTypeActionsDropdown
               record={row.original}
               key={row.id}
-              setEditPrinterModalIsOpen={setEditPrinterModalIsOpen}
-              setDeletePrinterModalIsOpen={setDeletePrinterModalIsOpen}
+              setEditProductTypeModalIsOpen={setEditProductTypeModalIsOpen}
+              setDeleteProductTypeModalIsOpen={setDeleteProductTypeModalIsOpen}
               setSelectedRecord={setSelectedRecord}
             />
           );
@@ -164,8 +150,6 @@ export default function PrintersTable({ tableData }: PrintersTableProps) {
     },
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -179,17 +163,17 @@ export default function PrintersTable({ tableData }: PrintersTableProps) {
           <div className='flex w-full items-center justify-end gap-4 px-4 pb-4'>
             <button
               onClick={() => handleExportToExcel()}
-              className='flex-end inline-flex items-center gap-3 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:shadow-md'
+              className='flex-end inline-flex items-center gap-3 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600 transition-all hover:text-gray-900 hover:shadow-md'
             >
               <ArrowDownTrayIcon className='h-5 w-5' />
               <span>{`Excel'e Aktar`}</span>
             </button>
             <button
-              onClick={() => setAddPrinterModalIsOpen(true)}
-              className='flex-end inline-flex items-center gap-3 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 hover:shadow-md'
+              onClick={() => setAddProductTypeModalIsOpen(true)}
+              className='flex-end inline-flex items-center gap-3 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-md'
             >
               <PlusIcon className='h-5 w-5' />
-              <span>Makine Ekle</span>
+              <span>Ürün Grubu Ekle</span>
             </button>
           </div>
           <TableInstance isLoading={isLoading} table={table} />
@@ -198,27 +182,27 @@ export default function PrintersTable({ tableData }: PrintersTableProps) {
       </div>
 
       {selectedRecord !== null ? (
-        <EditPrinterDialog
-          open={editPrinterModalIsOpen}
-          setOpen={setEditPrinterModalIsOpen}
+        <EditProductTypeDialog
+          open={editProductTypeModalIsOpen}
+          setOpen={setEditProductTypeModalIsOpen}
           record={selectedRecord}
           setSelectedRecord={setSelectedRecord}
         />
       ) : null}
 
       {selectedRecord !== null ? (
-        <DeletePrinterDialog
-          open={deletePrinterModalIsOpen}
-          setOpen={setDeletePrinterModalIsOpen}
+        <DeleteProductTypeDialog
+          open={deleteProductTypeModalIsOpen}
+          setOpen={setDeleteProductTypeModalIsOpen}
           record={selectedRecord}
           setSelectedRecord={setSelectedRecord}
         />
       ) : null}
 
-      {addPrinterModalIsOpen ? (
-        <AddPrinterDialog
-          open={addPrinterModalIsOpen}
-          setOpen={setAddPrinterModalIsOpen}
+      {addProductTypeModalIsOpen ? (
+        <AddProductTypeDialog
+          open={addProductTypeModalIsOpen}
+          setOpen={setAddProductTypeModalIsOpen}
         />
       ) : null}
     </>
