@@ -3,8 +3,14 @@ import ModalWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
 import { useAddProduct } from '@/data/hooks/useProductsData';
-import type { Product } from '@/data/models/entityModels';
+import type {
+  Product,
+  ProductGroup,
+  ProductType,
+} from '@/data/models/entityModels';
 import DialogActionButton from '@/components/dialog/DialogActionButton';
+import SelectProductGroup from '@/components/select/SelectProductGroup';
+import SelectProductType from '@/components/select/SelectProductType';
 
 type AddProductDialogProps = {
   open: boolean;
@@ -21,17 +27,24 @@ export default function AddProductDialog({
       | 'id'
       | 'main_safe_quantity'
       | 'daily_safe_quantity'
+      | 'product_group_id'
+      | 'product_type_id'
       | 'is_active'
       | 'is_deleted'
     >
   >({
     name: '',
-    product_type_id: 0,
-    product_group_id: 0,
     client_id: '',
     description: '',
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [selectedProductGroup, setSelectedProductGroup] = useState<
+    ProductGroup | undefined
+  >();
+  const [selectedProductType, setSelectedProductType] = useState<
+    ProductType | undefined
+  >();
 
   const { mutate, isLoading, isError, error, data, isSuccess } =
     useAddProduct();
@@ -51,7 +64,12 @@ export default function AddProductDialog({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(newRecord);
+    if (selectedProductGroup && selectedProductType)
+      mutate({
+        ...newRecord,
+        product_group_id: selectedProductGroup.id,
+        product_type_id: selectedProductType.id,
+      });
   };
 
   return (
@@ -79,14 +97,9 @@ export default function AddProductDialog({
           >
             Ürün Grubu
           </label>
-          <input
-            value={newRecord.product_group_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='product_group_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          <SelectProductGroup
+            selected={selectedProductGroup}
+            setSelected={setSelectedProductGroup}
           />
         </fieldset>
 
@@ -97,14 +110,9 @@ export default function AddProductDialog({
           >
             Ürün Tipi
           </label>
-          <input
-            value={newRecord.product_type_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='product_type_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          <SelectProductType
+            selected={selectedProductType}
+            setSelected={setSelectedProductType}
           />
         </fieldset>
 

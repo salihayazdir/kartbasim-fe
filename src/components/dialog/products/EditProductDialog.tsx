@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useEditProduct } from '@/data/hooks/useProductsData';
-import type { Product } from '@/data/models/entityModels';
+import type {
+  Product,
+  ProductGroup,
+  ProductType,
+} from '@/data/models/entityModels';
 import ModalWrapper from '../DialogWrapper';
 import { Switch } from '@headlessui/react';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
 import _ from 'lodash';
 import DialogActionButton from '../DialogActionButton';
+import SelectProductGroup from '@/components/select/SelectProductGroup';
+import SelectProductType from '@/components/select/SelectProductType';
 
 type EditProductDialogProps = {
   record: Product;
@@ -24,6 +30,13 @@ export default function EditProductDialog({
   const [newRecord, setNewRecord] = useState<Product>(record);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [selectedProductGroup, setSelectedProductGroup] = useState<
+    ProductGroup | undefined
+  >();
+  const [selectedProductType, setSelectedProductType] = useState<
+    ProductType | undefined
+  >();
 
   const { mutate, isLoading, isError, isSuccess, data, error } =
     useEditProduct();
@@ -45,7 +58,12 @@ export default function EditProductDialog({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(newRecord);
+    if (selectedProductGroup && selectedProductType)
+      mutate({
+        ...newRecord,
+        product_group_id: selectedProductGroup.id,
+        product_type_id: selectedProductType.id,
+      });
   };
 
   const title = `Ürün Düzenle | ${record.name}`;
@@ -86,14 +104,10 @@ export default function EditProductDialog({
           >
             Ürün Grubu
           </label>
-          <input
-            value={newRecord.product_group_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='product_group_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          <SelectProductGroup
+            selected={selectedProductGroup}
+            setSelected={setSelectedProductGroup}
+            defaultSelectionId={record.product_group_id}
           />
         </fieldset>
 
@@ -104,14 +118,10 @@ export default function EditProductDialog({
           >
             Ürün Tipi
           </label>
-          <input
-            value={newRecord.product_type_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='product_type_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          <SelectProductType
+            selected={selectedProductType}
+            setSelected={setSelectedProductType}
+            defaultSelectionId={record.product_type_id}
           />
         </fieldset>
 

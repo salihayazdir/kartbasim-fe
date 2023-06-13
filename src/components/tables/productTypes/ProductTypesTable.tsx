@@ -173,7 +173,7 @@ export default function ProductTypesTable({
               className='flex-end inline-flex items-center gap-3 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-blue-700 hover:shadow-md'
             >
               <PlusIcon className='h-5 w-5' />
-              <span>Ürün Grubu Ekle</span>
+              <span>Ürün Tipi Ekle</span>
             </button>
           </div>
           <TableInstance isLoading={isLoading} table={table} />

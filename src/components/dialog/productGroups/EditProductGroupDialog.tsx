@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useEditProductGroup } from '@/data/hooks/useProductGroupsData';
-import type { ProductGroup } from '@/data/models/entityModels';
+import type { Bank, ProductGroup } from '@/data/models/entityModels';
 import ModalWrapper from '../DialogWrapper';
 import { Switch } from '@headlessui/react';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
 import _ from 'lodash';
 import DialogActionButton from '../DialogActionButton';
+import SelectBank from '@/components/select/SelectBank';
 
 type EditProductGroupDialogProps = {
   record: ProductGroup;
@@ -24,6 +25,8 @@ export default function EditProductGroupDialog({
   const [newRecord, setNewRecord] = useState<ProductGroup>(record);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [selectedBank, setSelectedBank] = useState<Bank | undefined>();
 
   const { mutate, isLoading, isError, isSuccess, data, error } =
     useEditProductGroup();
@@ -83,14 +86,10 @@ export default function EditProductGroupDialog({
           <label className='font-semibold text-slate-700' htmlFor='bank_id'>
             Banka
           </label>
-          <input
-            value={newRecord.bank_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='bank_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          <SelectBank
+            selected={selectedBank}
+            setSelected={setSelectedBank}
+            defaultSelectionId={record.bank_id}
           />
         </fieldset>
 

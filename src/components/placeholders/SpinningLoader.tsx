@@ -1,8 +1,10 @@
-export default function SpinningLoader() {
+export default function SpinningLoader({ small }: { small?: boolean }) {
   return (
     <svg
       aria-hidden='true'
-      className={`mr-2 h-8 w-8 animate-spin fill-blue-600 text-slate-200`}
+      className={` ${
+        small ? 'h-5 w-5' : 'h-8 w-8'
+      } animate-spin fill-blue-600 text-slate-200`}
       viewBox='0 0 100 101'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'

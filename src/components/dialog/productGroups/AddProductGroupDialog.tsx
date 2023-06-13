@@ -3,8 +3,9 @@ import ModalWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
 import { useAddProductGroup } from '@/data/hooks/useProductGroupsData';
-import type { ProductGroup } from '@/data/models/entityModels';
+import type { Bank, ProductGroup } from '@/data/models/entityModels';
 import DialogActionButton from '@/components/dialog/DialogActionButton';
+import SelectBank from '@/components/select/SelectBank';
 
 type AddProductGroupDialogProps = {
   open: boolean;
@@ -16,14 +17,15 @@ export default function AddProductGroupDialog({
   setOpen,
 }: React.PropsWithChildren<AddProductGroupDialogProps>) {
   const [newRecord, setNewRecord] = useState<
-    Omit<ProductGroup, 'id' | 'is_active' | 'is_deleted'>
+    Omit<ProductGroup, 'id' | 'is_active' | 'bank_id' | 'is_deleted'>
   >({
     name: '',
-    bank_id: 0,
     client_id: '',
     description: '',
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [selectedBank, setSelectedBank] = useState<Bank | undefined>();
 
   const { mutate, isLoading, isError, error, data, isSuccess } =
     useAddProductGroup();
@@ -43,7 +45,11 @@ export default function AddProductGroupDialog({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(newRecord);
+    if (selectedBank)
+      mutate({
+        ...newRecord,
+        bank_id: selectedBank.id,
+      });
   };
 
   return (
@@ -68,15 +74,7 @@ export default function AddProductGroupDialog({
           <label className='font-semibold text-slate-700' htmlFor='bank_id'>
             Banka
           </label>
-          <input
-            value={newRecord.bank_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='bank_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
-          />
+          <SelectBank selected={selectedBank} setSelected={setSelectedBank} />
         </fieldset>
 
         <fieldset className='flex flex-col gap-1'>

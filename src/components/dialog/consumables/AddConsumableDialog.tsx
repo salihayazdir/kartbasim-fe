@@ -3,8 +3,9 @@ import ModalWrapper from '../DialogWrapper';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
 import { useAddConsumable } from '@/data/hooks/useConsumablesData';
-import type { Consumable } from '@/data/models/entityModels';
+import type { Consumable, ConsumableType } from '@/data/models/entityModels';
 import DialogActionButton from '@/components/dialog/DialogActionButton';
+import SelectConsumableType from '@/components/select/SelectConsumableType';
 
 type AddConsumableDialogProps = {
   open: boolean;
@@ -22,6 +23,10 @@ export default function AddConsumableDialog({
     consumable_type_id: 0,
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [selectedConsumableType, setSelectedConsumableType] = useState<
+    ConsumableType | undefined
+  >();
 
   const { mutate, isLoading, isError, error, data, isSuccess } =
     useAddConsumable();
@@ -41,7 +46,11 @@ export default function AddConsumableDialog({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(newRecord);
+    if (selectedConsumableType)
+      mutate({
+        ...newRecord,
+        consumable_type_id: selectedConsumableType.id,
+      });
   };
 
   return (
@@ -69,14 +78,9 @@ export default function AddConsumableDialog({
           >
             Matbuat Türü
           </label>
-          <input
-            value={newRecord.consumable_type_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='consumable_type_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          <SelectConsumableType
+            selected={selectedConsumableType}
+            setSelected={setSelectedConsumableType}
           />
         </fieldset>
 

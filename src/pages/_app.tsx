@@ -37,7 +37,7 @@ export default function App({ Component, pageProps, ...appProps }: AppProps) {
       </Layout>
     );
   };
-  console.log(inter);
+
   return (
     <AppContextProvider>
       <QueryClientProvider client={client}>

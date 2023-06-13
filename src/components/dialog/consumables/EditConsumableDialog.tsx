@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useEditConsumable } from '@/data/hooks/useConsumablesData';
-import type { Consumable } from '@/data/models/entityModels';
+import type { Consumable, ConsumableType } from '@/data/models/entityModels';
 import ModalWrapper from '../DialogWrapper';
 import { Switch } from '@headlessui/react';
 import DialogResponseMessages from '../DialogResponseMessages';
 import { AxiosError } from 'axios';
 import _ from 'lodash';
 import DialogActionButton from '../DialogActionButton';
+import SelectConsumableType from '@/components/select/SelectConsumableType';
 
 type EditConsumableDialogProps = {
   record: Consumable;
@@ -25,6 +26,10 @@ export default function EditConsumableDialog({
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  const [selectedConsumableType, setSelectedConsumableType] = useState<
+    ConsumableType | undefined
+  >();
+
   const { mutate, isLoading, isError, isSuccess, data, error } =
     useEditConsumable();
 
@@ -33,7 +38,9 @@ export default function EditConsumableDialog({
       setErrorMessage(error.response?.data.error.message);
   }, [error]);
 
-  const isUnchanged: boolean = _.isEqual(newRecord, record);
+  const isUnchanged: boolean =
+    _.isEqual(newRecord, record) &&
+    record.consumable_type_id === selectedConsumableType?.id;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -45,7 +52,11 @@ export default function EditConsumableDialog({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(newRecord);
+    if (selectedConsumableType)
+      mutate({
+        ...newRecord,
+        consumable_type_id: selectedConsumableType.id,
+      });
   };
 
   const title = `Matbuat Düzenle | ${record.name}`;
@@ -86,14 +97,10 @@ export default function EditConsumableDialog({
           >
             Matbuat Türü
           </label>
-          <input
-            value={newRecord.consumable_type_id}
-            onChange={onChange}
-            disabled={isLoading}
-            id='consumable_type_id'
-            required
-            type='number'
-            className='block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-blue-500 '
+          <SelectConsumableType
+            selected={selectedConsumableType}
+            setSelected={setSelectedConsumableType}
+            defaultSelectionId={record.consumable_type_id}
           />
         </fieldset>
 
