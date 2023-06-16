@@ -46,7 +46,10 @@ export default function EditProductDialog({
       setErrorMessage(error.response?.data.error.message);
   }, [error]);
 
-  const isUnchanged: boolean = _.isEqual(newRecord, record);
+  const isUnchanged: boolean =
+    _.isEqual(newRecord, record) &&
+    record.product_group_id === selectedProductGroup?.id &&
+    record.product_type_id === selectedProductType?.id;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;

@@ -1,3 +1,4 @@
+import { User } from '@/data/models/entityModels';
 import {
   Dispatch,
   SetStateAction,
@@ -7,13 +8,13 @@ import {
 } from 'react';
 
 export interface IAppContext {
-  test: string;
-  setTest: Dispatch<SetStateAction<string>>;
+  userContext: User | null;
+  setUserContext: Dispatch<SetStateAction<User | null>>;
 }
 
 const defaultState = {
-  test: '',
-  setTest: (test: string) => {},
+  userContext: null,
+  setUserContext: (user: User | null) => {},
 } as IAppContext;
 
 export const AppContext = createContext<IAppContext>(defaultState);
@@ -23,9 +24,9 @@ type AppContextProps = {
 };
 
 export default function AppContextProvider({ children }: AppContextProps) {
-  const [test, setTest] = useState<string>('');
+  const [userContext, setUserContext] = useState<User | null>(null);
   return (
-    <AppContext.Provider value={{ test, setTest }}>
+    <AppContext.Provider value={{ userContext, setUserContext }}>
       {children}
     </AppContext.Provider>
   );

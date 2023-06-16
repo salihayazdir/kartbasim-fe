@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import DialogResponseMessages from '@/components/dialog/DialogResponseMessages';
-import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import cookie from 'cookie';
 import { useRouter } from 'next/router';
+import {
+  axiosProtected,
+  axiosProtectedServerSide,
+  axiosPublic,
+  axiosPublicServerSide,
+} from '@/utils/axiosInstances';
+import axios, { AxiosError } from 'axios';
 
 export default function Giris() {
   const [loginUsername, setLoginUsername] = useState<string>('');
@@ -33,7 +39,7 @@ export default function Giris() {
       isSuccess: false,
       errorMessage: '',
     });
-    axios
+    axiosPublic
       .post('/api/auth/login', { username: loginUsername })
       .then((res) => {
         setLoginStep(2);
@@ -65,7 +71,7 @@ export default function Giris() {
       isSuccess: false,
       errorMessage: '',
     });
-    axios
+    axiosPublic
       .post(
         '/api/auth/session',
         { username: loginUsername, otp },
@@ -204,33 +210,58 @@ export const getServerSideProps: GetServerSideProps = async (
       };
 
     const cookies = cookie.parse(context.req.headers.cookie);
-    const { Authorization: accessToken, 'x-refresh': refreshToken } = cookies;
+    const { Authorization: accessToken, refresh: refreshToken } = cookies;
 
-    const meRequest = await axios
-      .get('/api/users/me', {
+    try {
+      const meRequest = await axiosProtectedServerSide.get('/api/users/me', {
         headers: {
-          Authorization: accessToken,
+          Authorization: accessToken ?? '',
+          refresh: refreshToken ?? '',
         },
-      })
-      .catch((err) => console.error(err?.response?.data?.error));
+      });
+      if (meRequest?.data.data)
+        return {
+          redirect: {
+            permanent: false,
+            destination: '/',
+          },
+        };
+    } catch (meRequestError: any) {
+      if (meRequestError.response.status) {
+        try {
+          const refreshRequest = await axiosPublicServerSide.get(
+            '/api/auth/refresh',
+            {
+              headers: {
+                refresh: refreshToken ?? '',
+              },
+            }
+          );
 
-    if (meRequest?.data.data)
-      return {
-        redirect: {
-          permanent: false,
-          destination: '/',
-        },
-      };
+          if (refreshRequest?.data?.data?.accessToken) {
+            context.res.setHeader(
+              'set-cookie',
+              `Authorization = Bearer%20${refreshRequest?.data?.data?.accessToken}`
+            );
+            return {
+              props: {},
+            };
+          }
+        } catch (refreshRequestError) {
+          return {
+            props: {},
+          };
+        }
+      }
+    }
 
     return {
       props: {},
     };
-  } catch (err) {
+  } catch (err: any) {
+    console.error(err);
     return {
-      redirect: {
-        permanent: false,
-        destination: '/500',
-      },
+      props: {},
     };
   }
 };

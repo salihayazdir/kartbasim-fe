@@ -1,12 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import type { ResponseObject } from '../models/dataTransferModels';
 import type { ProductGroup } from '../models/entityModels';
+import { axiosProtected } from '@/utils/axiosInstances';
 
 const fetchProductGroups = async (): Promise<
   ResponseObject<ProductGroup[]>
 > => {
-  const response = await axios.get('/api/product-groups');
+  const response = await axiosProtected.get('/api/product-groups');
   return response.data;
 };
 
@@ -25,7 +26,7 @@ export const useGetProductGroups = (
 const addProductGroup = (
   productGroup: Omit<ProductGroup, 'id' | 'is_active' | 'is_deleted'>
 ): Promise<AxiosResponse<ResponseObject<{ insertedId: number }>>> => {
-  return axios.post('/api/product-groups', productGroup);
+  return axiosProtected.post('/api/product-groups', productGroup);
 };
 
 export const useAddProductGroup = () => {
@@ -40,7 +41,10 @@ export const useAddProductGroup = () => {
 const editProductGroup = (
   productGroup: ProductGroup
 ): Promise<AxiosResponse<ResponseObject<{ editedId: number }>>> => {
-  return axios.put(`/api/product-groups/${productGroup.id}`, productGroup);
+  return axiosProtected.put(
+    `/api/product-groups/${productGroup.id}`,
+    productGroup
+  );
 };
 
 export const useEditProductGroup = () => {
@@ -55,7 +59,7 @@ export const useEditProductGroup = () => {
 const deleteProductGroup = (
   id: number
 ): Promise<AxiosResponse<ResponseObject<{ deletedId: number }>>> => {
-  return axios.delete(`/api/product-groups/${id}`);
+  return axiosProtected.delete(`/api/product-groups/${id}`);
 };
 
 export const useDeleteProductGroup = () => {

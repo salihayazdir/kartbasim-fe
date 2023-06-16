@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import type { ResponseObject } from '../models/dataTransferModels';
 import type { Bank } from '../models/entityModels';
+import { axiosProtected } from '@/utils/axiosInstances';
 
 const fetchBanks = async (): Promise<ResponseObject<Bank[]>> => {
-  const response = await axios.get('/api/banks');
+  const response = await axiosProtected.get('/api/banks');
   return response.data;
 };
 
@@ -26,7 +27,7 @@ const addBank = (
   const requestBody = {
     name,
   };
-  return axios.post('/api/banks', requestBody);
+  return axiosProtected.post('/api/banks', requestBody);
 };
 
 export const useAddBank = () => {
@@ -44,7 +45,7 @@ const editBank = (bank: Bank) => {
     name,
     is_active,
   };
-  return axios.put(`/api/banks/${id}`, requestBody);
+  return axiosProtected.put(`/api/banks/${id}`, requestBody);
 };
 
 export const useEditBank = () => {
@@ -59,7 +60,7 @@ export const useEditBank = () => {
 const deleteBank = (
   id: number
 ): Promise<AxiosResponse<ResponseObject<{ deletedId: number }>>> => {
-  return axios.delete(`/api/banks/${id}`);
+  return axiosProtected.delete(`/api/banks/${id}`);
 };
 
 export const useDeleteBank = () => {

@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import type { ResponseObject } from '../models/dataTransferModels';
 import type { ProductType } from '../models/entityModels';
+import { axiosProtected } from '@/utils/axiosInstances';
 
 const fetchProductTypes = async (): Promise<ResponseObject<ProductType[]>> => {
-  const response = await axios.get('/api/product-types');
+  const response = await axiosProtected.get('/api/product-types');
   return response.data;
 };
 
@@ -23,7 +24,7 @@ export const useGetProductTypes = (
 const addProductType = (
   productType: Omit<ProductType, 'id' | 'is_active' | 'is_deleted'>
 ): Promise<AxiosResponse<ResponseObject<{ insertedId: number }>>> => {
-  return axios.post('/api/product-types', productType);
+  return axiosProtected.post('/api/product-types', productType);
 };
 
 export const useAddProductType = () => {
@@ -38,7 +39,10 @@ export const useAddProductType = () => {
 const editProductType = (
   productType: ProductType
 ): Promise<AxiosResponse<ResponseObject<{ editedId: number }>>> => {
-  return axios.put(`/api/product-types/${productType.id}`, productType);
+  return axiosProtected.put(
+    `/api/product-types/${productType.id}`,
+    productType
+  );
 };
 
 export const useEditProductType = () => {
@@ -53,7 +57,7 @@ export const useEditProductType = () => {
 const deleteProductType = (
   id: number
 ): Promise<AxiosResponse<ResponseObject<{ deletedId: number }>>> => {
-  return axios.delete(`/api/product-types/${id}`);
+  return axiosProtected.delete(`/api/product-types/${id}`);
 };
 
 export const useDeleteProductType = () => {

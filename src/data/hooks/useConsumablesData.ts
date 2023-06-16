@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import type { ResponseObject } from '../models/dataTransferModels';
 import type { Consumable } from '../models/entityModels';
+import { axiosProtected } from '@/utils/axiosInstances';
 
 const fetchConsumables = async (): Promise<ResponseObject<Consumable[]>> => {
-  const response = await axios.get('/api/consumables');
+  const response = await axiosProtected.get('/api/consumables');
   return response.data;
 };
 
@@ -26,7 +27,7 @@ const addConsumable = (
     'id' | 'stock_quantity' | 'is_active' | 'is_deleted'
   >
 ): Promise<AxiosResponse<ResponseObject<{ insertedId: number }>>> => {
-  return axios.post('/api/consumables', consumable);
+  return axiosProtected.post('/api/consumables', consumable);
 };
 
 export const useAddConsumable = () => {
@@ -41,7 +42,7 @@ export const useAddConsumable = () => {
 const editConsumable = (
   consumable: Consumable
 ): Promise<AxiosResponse<ResponseObject<{ editedId: number }>>> => {
-  return axios.put(`/api/consumables/${consumable.id}`, consumable);
+  return axiosProtected.put(`/api/consumables/${consumable.id}`, consumable);
 };
 
 export const useEditConsumable = () => {
@@ -56,7 +57,7 @@ export const useEditConsumable = () => {
 const deleteConsumable = (
   id: number
 ): Promise<AxiosResponse<ResponseObject<{ deletedId: number }>>> => {
-  return axios.delete(`/api/consumables/${id}`);
+  return axiosProtected.delete(`/api/consumables/${id}`);
 };
 
 export const useDeleteConsumable = () => {

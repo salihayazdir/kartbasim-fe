@@ -36,7 +36,8 @@ export default function EditProductGroupDialog({
       setErrorMessage(error.response?.data.error.message);
   }, [error]);
 
-  const isUnchanged: boolean = _.isEqual(newRecord, record);
+  const isUnchanged: boolean =
+    _.isEqual(newRecord, record) && record.bank_id === selectedBank?.id;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;

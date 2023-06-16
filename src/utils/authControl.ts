@@ -1,6 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
 import cookie from 'cookie';
-import axios from 'axios';
+import {
+  axiosProtectedServerSide,
+  axiosPublicServerSide,
+} from './axiosInstances';
 
 export default async function authControl(context: GetServerSidePropsContext) {
   try {
@@ -13,41 +16,123 @@ export default async function authControl(context: GetServerSidePropsContext) {
       };
 
     const cookies = cookie.parse(context.req.headers.cookie);
-    const { Authorization: accessToken, 'x-refresh': refreshToken } = cookies;
+    const { Authorization: accessToken, refresh: refreshToken } = cookies;
 
-    if (!accessToken || !refreshToken)
-      return {
-        redirect: {
-          permanent: false,
-          destination: '/giris',
-        },
-      };
-
-    const meRequest = await axios
-      .get('/api/users/me', {
+    try {
+      const meRequest = await axiosProtectedServerSide.get('/api/users/me', {
         headers: {
-          Authorization: accessToken,
+          Authorization: accessToken ?? '',
+          refresh: refreshToken ?? '',
         },
-      })
-      .catch((err) => console.error(err.data));
+      });
+      if (meRequest?.data.data)
+        return {
+          props: { user: meRequest.data.data },
+        };
+    } catch (meRequestError: any) {
+      if (meRequestError.response.status) {
+        try {
+          const refreshRequest = await axiosPublicServerSide.get(
+            '/api/auth/refresh',
+            {
+              headers: {
+                refresh: refreshToken ?? '',
+              },
+            }
+          );
 
-    if (!meRequest?.data.data)
-      return {
-        redirect: {
-          permanent: false,
-          destination: '/giris',
-        },
-      };
+          if (refreshRequest?.data?.data?.accessToken) {
+            context.res.setHeader(
+              'set-cookie',
+              `Authorization = Bearer%20${refreshRequest?.data?.data?.accessToken}`
+            );
+            return {
+              props: {},
+            };
+          }
+        } catch (refreshRequestError) {
+          return {
+            redirect: {
+              permanent: false,
+              destination: '/giris',
+            },
+          };
+        }
+      }
+    }
 
-    return {
-      props: { user: meRequest.data.data },
-    };
-  } catch (err) {
     return {
       redirect: {
         permanent: false,
-        destination: '/500',
+        destination: '/giris',
+      },
+    };
+  } catch (err: any) {
+    console.error(err);
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/giris',
       },
     };
   }
 }
+
+// export default async function authControl(context: GetServerSidePropsContext) {
+//   try {
+//     if (!context.req.headers.cookie)
+//       return {
+//         redirect: {
+//           permanent: false,
+//           destination: '/giris',
+//         },
+//       };
+
+//     const cookies = cookie.parse(context.req.headers.cookie);
+//     const { Authorization: accessToken, refresh: refreshToken } = cookies;
+
+//     if (!accessToken || !refreshToken)
+//       return {
+//         redirect: {
+//           permanent: false,
+//           destination: '/giris',
+//         },
+//       };
+
+//     const meRequest = await axiosProtected
+//       .get('/api/users/me', {
+//         headers: {
+//           Authorization: accessToken,
+//         },
+//       })
+//       .catch((err) => {
+//         console.error(err?.response?.data?.error);
+//         if (err.response.status === 401) {
+//           axiosPublic
+//             .get('/api/auth/refresh', { withCredentials: true })
+//             .catch((refreshError) => {
+//               return Promise.reject(refreshError);
+//             });
+//         }
+//       });
+
+//     if (!meRequest?.data.data)
+//       return {
+//         redirect: {
+//           permanent: false,
+//           destination: '/giris',
+//         },
+//       };
+
+//     return {
+//       props: { user: meRequest.data.data },
+//     };
+//   } catch (err) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: '/giris',
+//       },
+//     };
+//   }
+// }

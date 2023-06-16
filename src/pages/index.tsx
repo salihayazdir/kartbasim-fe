@@ -1,9 +1,10 @@
-import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import cookie from 'cookie';
 import authControl from '@/utils/authControl';
+import useSetUserContext from '@/utils/useSetUserContext';
+import { PageProps } from '@/data/models/props';
 
-export default function Home() {
+export default function Home({ user }: PageProps) {
+  useSetUserContext(user);
   return <>dashboard</>;
 }
 

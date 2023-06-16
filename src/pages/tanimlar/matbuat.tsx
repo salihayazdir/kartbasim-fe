@@ -9,8 +9,6 @@ import { useGetConsumables } from '@/data/hooks/useConsumablesData';
 export default function Matbuat() {
   const [tableData, setTableData] = useState<Consumable[]>([]);
 
-  console.log(tableData);
-
   const onGetConsumablesSuccess = (data: ResponseObject<Consumable[]>) => {
     setTableData(data.data);
   };

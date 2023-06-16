@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import type { ResponseObject } from '../models/dataTransferModels';
 import type { Printer } from '../models/entityModels';
+import { axiosProtected } from '@/utils/axiosInstances';
 
 const fetchPrinters = async (): Promise<ResponseObject<Printer[]>> => {
-  const response = await axios.get('/api/printers');
+  const response = await axiosProtected.get('/api/printers');
   return response.data;
 };
 
@@ -23,7 +24,7 @@ export const useGetPrinters = (
 const addPrinter = (
   printer: Omit<Printer, 'id' | 'is_active' | 'is_deleted'>
 ): Promise<AxiosResponse<ResponseObject<{ insertedId: number }>>> => {
-  return axios.post('/api/printers', printer);
+  return axiosProtected.post('/api/printers', printer);
 };
 
 export const useAddPrinter = () => {
@@ -38,7 +39,7 @@ export const useAddPrinter = () => {
 const editPrinter = (
   printer: Printer
 ): Promise<AxiosResponse<ResponseObject<{ editedId: number }>>> => {
-  return axios.put(`/api/Printers/${printer.id}`, printer);
+  return axiosProtected.put(`/api/Printers/${printer.id}`, printer);
 };
 
 export const useEditPrinter = () => {
@@ -53,7 +54,7 @@ export const useEditPrinter = () => {
 const deletePrinter = (
   id: number
 ): Promise<AxiosResponse<ResponseObject<{ deletedId: number }>>> => {
-  return axios.delete(`/api/printers/${id}`);
+  return axiosProtected.delete(`/api/printers/${id}`);
 };
 
 export const useDeletePrinter = () => {
