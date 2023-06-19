@@ -1,5 +1,5 @@
-import BanksTable from '@/components/tables/banks/BanksTable';
-import { useGetBanks } from '@/data/hooks/useBanksData';
+import BanksTable from '@/components/tables/definitions/banks/BanksTable';
+import { useGetBanks } from '@/data/hooks/definitions/useBanksData';
 import { useState } from 'react';
 import type { ResponseObject } from '@/data/models/dataTransferModels';
 import type { Bank } from '@/data/models/entityModels';

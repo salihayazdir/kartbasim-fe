@@ -17,7 +17,7 @@ export default function NavItem({
     <Link href={`/${slug}`}>
       <button
         disabled={isActive}
-        className={`${navItemStyles} hover:text-gray-600 ${
+        className={`transition-all ${navItemStyles} hover:text-gray-600 ${
           isActive &&
           'disabled:cursor-auto disabled:bg-blue-50 disabled:text-blue-800 disabled:hover:bg-blue-50 disabled:hover:text-blue-800'
         }`}

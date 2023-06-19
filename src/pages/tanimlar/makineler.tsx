@@ -1,8 +1,8 @@
-import { useGetPrinters } from '@/data/hooks/usePrintersData';
+import { useGetPrinters } from '@/data/hooks/definitions/usePrintersData';
 import { useState } from 'react';
 import type { ResponseObject } from '@/data/models/dataTransferModels';
 import type { Printer } from '@/data/models/entityModels';
-import PrintersTable from '@/components/tables/printers/PrintersTable';
+import PrintersTable from '@/components/tables/definitions/printers/PrintersTable';
 import authControl from '@/utils/authControl';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 

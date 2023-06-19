@@ -23,21 +23,30 @@ export default function DialogWrapper({
     if (onCloseAction !== undefined) onCloseAction();
   };
   return (
-    <Dialog open={open} onClose={onClose}>
-      <div className='fixed inset-0 bg-black/30' aria-hidden='true' />
-      <Dialog.Panel className='fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white shadow-2xl focus:outline-none data-[state=open]:animate-contentShow'>
-        <Dialog.Title className='flex justify-between border-b border-slate-200 py-4 pl-8 pr-4 font-semibold text-slate-800'>
-          <span>{title}</span>
-          <button
-            className='inline-flex h-6 w-6 appearance-none items-center justify-center rounded-md hover:bg-slate-100 focus:outline-none'
-            aria-label='Close'
-            onClick={onClose}
-          >
-            <XMarkIcon className='h-5 w-5' />
-          </button>
-        </Dialog.Title>
-        <div className='p-8 pt-4'>{children}</div>
-      </Dialog.Panel>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      className='fixed inset-0 z-10 overflow-y-auto backdrop-blur-sm'
+    >
+      <Dialog.Overlay
+        as='div'
+        className='flex min-h-screen items-center justify-center'
+      >
+        <div className='pointer-events-none fixed inset-0 bg-slate-500 opacity-40 ' />
+        <div className='relative mx-auto my-16 w-[90vw] max-w-[450px] rounded-xl bg-white shadow-2xl '>
+          <Dialog.Title className='flex justify-between border-b border-slate-200 py-4 pl-8 pr-4 font-semibold text-slate-800'>
+            <span>{title}</span>
+            <button
+              className='inline-flex h-6 w-6 appearance-none items-center justify-center rounded-md transition-all hover:bg-slate-100 focus:outline-none'
+              aria-label='Close'
+              onClick={onClose}
+            >
+              <XMarkIcon className='h-5 w-5' />
+            </button>
+          </Dialog.Title>
+          <div className='p-8 pt-4'>{children}</div>
+        </div>
+      </Dialog.Overlay>
     </Dialog>
   );
 }

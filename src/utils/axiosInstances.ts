@@ -31,11 +31,6 @@ export const axiosProtectedServerSide = axios.create({
   baseURL: baseUrl,
 });
 
-axiosProtected.interceptors.request.use((req) => {
-  console.log(`url: "${req.url}"`);
-  return req;
-});
-
 axiosProtected.interceptors.response.use(
   async (res) => res,
   async (error) => {

@@ -1,10 +1,10 @@
 import { ProductType } from '@/data/models/entityModels';
-import { useGetProductTypes } from '@/data/hooks/useProductTypesData';
+import { useGetProductTypes } from '@/data/hooks/definitions/useProductTypesData';
 import ComboboxInstance from './ComboboxInstance';
 
 type SelectProductTypeProps = {
-  selected: ProductType | undefined;
-  setSelected: React.Dispatch<React.SetStateAction<ProductType | undefined>>;
+  selected: ProductType | null;
+  setSelected: React.Dispatch<React.SetStateAction<ProductType | null>>;
   defaultSelectionId?: number;
 };
 
@@ -26,7 +26,7 @@ export default function SelectProductType({
       items={items}
       isLoading={isLoading}
       id='product-type-id'
-      notFoundText='Ürün tipi bulunamadı.'
+      fieldDisplayName='Ürün tipi'
       defaultSelectionId={defaultSelectionId}
     />
   );

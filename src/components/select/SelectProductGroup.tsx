@@ -1,10 +1,10 @@
 import { ProductGroup } from '@/data/models/entityModels';
-import { useGetProductGroups } from '@/data/hooks/useProductGroupsData';
+import { useGetProductGroups } from '@/data/hooks/definitions/useProductGroupsData';
 import ComboboxInstance from './ComboboxInstance';
 
 type SelectProductGroupProps = {
-  selected: ProductGroup | undefined;
-  setSelected: React.Dispatch<React.SetStateAction<ProductGroup | undefined>>;
+  selected: ProductGroup | null;
+  setSelected: React.Dispatch<React.SetStateAction<ProductGroup | null>>;
   defaultSelectionId?: number;
 };
 
@@ -26,7 +26,7 @@ export default function SelectProductGroup({
       items={items}
       isLoading={isLoading}
       id='product-group-id'
-      notFoundText='Ürün grubu bulunamadı.'
+      fieldDisplayName='Ürün grubu'
       defaultSelectionId={defaultSelectionId}
     />
   );

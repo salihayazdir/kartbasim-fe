@@ -1,10 +1,10 @@
-import ConsumablesTable from '@/components/tables/consumables/ConsumablesTable';
+import ConsumablesTable from '@/components/tables/definitions/consumables/ConsumablesTable';
 import { useState } from 'react';
 import type { ResponseObject } from '@/data/models/dataTransferModels';
 import type { Consumable } from '@/data/models/entityModels';
 import authControl from '@/utils/authControl';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useGetConsumables } from '@/data/hooks/useConsumablesData';
+import { useGetConsumables } from '@/data/hooks/definitions/useConsumablesData';
 
 export default function Matbuat() {
   const [tableData, setTableData] = useState<Consumable[]>([]);

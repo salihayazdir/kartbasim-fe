@@ -1,10 +1,10 @@
-import ProductsTable from '@/components/tables/products/ProductsTable';
+import ProductsTable from '@/components/tables/definitions/products/ProductsTable';
 import { useState } from 'react';
 import type { ResponseObject } from '@/data/models/dataTransferModels';
 import type { Product } from '@/data/models/entityModels';
 import authControl from '@/utils/authControl';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useGetProducts } from '@/data/hooks/useProductsData';
+import { useGetProducts } from '@/data/hooks/definitions/useProductsData';
 
 export default function Urunler() {
   const [tableData, setTableData] = useState<Product[]>([]);

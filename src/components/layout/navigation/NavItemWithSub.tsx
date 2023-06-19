@@ -23,7 +23,7 @@ export default function NavItemWithSub({
     <div className='flex'>
       <Disclosure as='div' className='w-44'>
         <Disclosure.Button
-          className={`${navItemStyles} ${
+          className={`transition-all ${navItemStyles} ${
             isActive
               ? 'bg-blue-50 text-blue-800 hover:bg-blue-50 hover:text-blue-800'
               : 'hover:text-gray-600'
@@ -55,7 +55,7 @@ export default function NavItemWithSub({
                   <Link href={`/${slug}/${subItem.slug}`} key={subItem.slug}>
                     <button
                       disabled={isChildActive}
-                      className={`w-full rounded-md px-4 py-1 text-left hover:bg-slate-50 hover:text-gray-700 ${
+                      className={`  w-full rounded-md px-4 py-1 text-left hover:bg-slate-50 hover:text-gray-700 ${
                         isChildActive &&
                         ' bg-blue-50 text-blue-800 disabled:cursor-auto disabled:hover:bg-blue-50 disabled:hover:text-blue-800'
                       }`}

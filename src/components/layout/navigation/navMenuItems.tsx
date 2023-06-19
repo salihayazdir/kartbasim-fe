@@ -4,7 +4,7 @@ import {
   ListBulletIcon,
   PresentationChartLineIcon,
   Square3Stack3DIcon,
-  UserIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
 export interface INavItem {
   name: string;
@@ -107,7 +107,7 @@ export const navMenuItems: INavItem[] = [
     name: 'Kullanıcılar',
     slug: 'kullanicilar',
     icon: (size: number) => {
-      return <UserIcon className={`h-${size} w-${size}`} />;
+      return <UserGroupIcon className={`h-${size} w-${size}`} />;
     },
   },
 ];

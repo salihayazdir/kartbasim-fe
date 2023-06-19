@@ -1,10 +1,10 @@
-import ConsumableTypesTable from '@/components/tables/consumableTypes/ConsumableTypesTable';
+import ConsumableTypesTable from '@/components/tables/definitions/consumableTypes/ConsumableTypesTable';
 import { useState } from 'react';
 import type { ResponseObject } from '@/data/models/dataTransferModels';
 import type { ConsumableType } from '@/data/models/entityModels';
 import authControl from '@/utils/authControl';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useGetConsumableTypes } from '@/data/hooks/useConsumableTypesData';
+import { useGetConsumableTypes } from '@/data/hooks/definitions/useConsumableTypesData';
 
 export default function MatbuatTurleri() {
   const [tableData, setTableData] = useState<ConsumableType[]>([]);

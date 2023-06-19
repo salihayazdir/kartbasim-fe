@@ -1,10 +1,10 @@
 import { ConsumableType } from '@/data/models/entityModels';
-import { useGetConsumableTypes } from '@/data/hooks/useConsumableTypesData';
+import { useGetConsumableTypes } from '@/data/hooks/definitions/useConsumableTypesData';
 import ComboboxInstance from './ComboboxInstance';
 
 type SelectConsumableTypeProps = {
-  selected: ConsumableType | undefined;
-  setSelected: React.Dispatch<React.SetStateAction<ConsumableType | undefined>>;
+  selected: ConsumableType | null;
+  setSelected: React.Dispatch<React.SetStateAction<ConsumableType | null>>;
   defaultSelectionId?: number;
 };
 
@@ -26,7 +26,7 @@ export default function SelectConsumableType({
       items={items}
       isLoading={isLoading}
       id='consumable-type-id'
-      notFoundText='Matbuat türü bulunamadı.'
+      fieldDisplayName='Matbuat türü'
       defaultSelectionId={defaultSelectionId}
     />
   );

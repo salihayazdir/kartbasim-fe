@@ -111,3 +111,19 @@ export type User = {
   manager_name: string;
   manager_username: string;
 };
+
+export type ProductInventoryRecords = {
+  id: number;
+  product_id: number;
+  product_name: string;
+  product_group_name: string;
+  product_type_name: string;
+  bank_name: string;
+  product_inventory_record_type_id: number;
+  product_inventory_record_type_name: string;
+  batch_id?: number;
+  quantity: number;
+  is_main_safe: boolean;
+  created_at: string;
+  created_by_name?: string;
+};

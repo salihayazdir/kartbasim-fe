@@ -1,10 +1,10 @@
 import { Bank } from '@/data/models/entityModels';
-import { useGetBanks } from '@/data/hooks/useBanksData';
+import { useGetBanks } from '@/data/hooks/definitions/useBanksData';
 import ComboboxInstance from './ComboboxInstance';
 
 type SelectBankProps = {
-  selected: Bank | undefined;
-  setSelected: React.Dispatch<React.SetStateAction<Bank | undefined>>;
+  selected: Bank | null;
+  setSelected: React.Dispatch<React.SetStateAction<Bank | null>>;
   defaultSelectionId?: number;
 };
 
@@ -26,7 +26,7 @@ export default function SelectBank({
       items={items}
       isLoading={isLoading}
       id='bank-id'
-      notFoundText='Banka bulunamadı.'
+      fieldDisplayName='Banka'
       defaultSelectionId={defaultSelectionId}
     />
   );

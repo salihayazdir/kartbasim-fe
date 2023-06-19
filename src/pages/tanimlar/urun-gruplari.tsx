@@ -1,10 +1,10 @@
-import ProductGroupsTable from '@/components/tables/productGroups/ProductGroupsTable';
+import ProductGroupsTable from '@/components/tables/definitions/productGroups/ProductGroupsTable';
 import { useState } from 'react';
 import type { ResponseObject } from '@/data/models/dataTransferModels';
 import type { ProductGroup } from '@/data/models/entityModels';
 import authControl from '@/utils/authControl';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useGetProductGroups } from '@/data/hooks/useProductGroupsData';
+import { useGetProductGroups } from '@/data/hooks/definitions/useProductGroupsData';
 
 export default function UrunGruplari() {
   const [tableData, setTableData] = useState<ProductGroup[]>([]);
